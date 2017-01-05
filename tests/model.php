@@ -7,6 +7,7 @@ use jugger\model\field\IntField;
 use jugger\model\field\TextField;
 use jugger\model\field\EnumField;
 use jugger\model\field\BoolField;
+use jugger\model\handler\HandlerException;
 use jugger\model\validator\RangeValidator;
 use jugger\model\validator\RequireValidator;
 use jugger\model\validator\DynamicValidator;
@@ -152,5 +153,36 @@ class ModelTest extends TestCase
         $this->assertEquals($errors['fio'], RangeValidator::class);
         $this->assertEquals($errors['sex'], RequireValidator::class);
         $this->assertEquals($errors['is_superman'], DynamicValidator::class);
+    }
+
+    public function testHandlers()
+    {
+        // empty handler
+        $people = new People();
+        $people->addHandler(function(People $people){});
+        $this->assertTrue($people->handle()->isSuccess());
+
+        // bad handler
+        $people = new People();
+        $people->addHandler(function() {
+            throw new HandlerException("Bad handler");
+        });
+        $result = $people->handle();
+        $this->assertFalse($result->isSuccess());
+        $this->assertEquals($result->getMessage(), "Bad handler");
+
+        // order handlers
+        $people = new People();
+        $people->addHandler(function() {
+            throw new HandlerException("Handler 1");
+        });
+        $people->addHandler(function() {
+            throw new HandlerException("Handler 2");
+        }, true);
+        $people->addHandler(function() {
+            throw new HandlerException("Handler 3");
+        });
+
+        $this->assertEquals($people->handle()->getMessage(), "Handler 2");
     }
 }
