@@ -54,6 +54,23 @@ class People extends Model
     }
 }
 
+class HandlerTest extends Model
+{
+    public static function getSchema()
+    {
+        return [];
+    }
+
+    public static function getHandlers()
+    {
+        return [
+            function() {
+                throw new HandlerException("Internal handler");
+            },
+        ];
+    }
+}
+
 class ModelTest extends TestCase
 {
     public function testBase()
@@ -159,30 +176,30 @@ class ModelTest extends TestCase
     {
         // empty handler
         $people = new People();
+        $this->assertTrue($people->handle()->isSuccess());
+
+        // good handler
+        $people = new People();
         $people->addHandler(function(People $people){});
         $this->assertTrue($people->handle()->isSuccess());
 
         // bad handler
-        $people = new People();
-        $people->addHandler(function() {
-            throw new HandlerException("Bad handler");
-        });
-        $result = $people->handle();
+        $model = new HandlerTest();
+        $result = $model->handle();
         $this->assertFalse($result->isSuccess());
-        $this->assertEquals($result->getMessage(), "Bad handler");
+        $this->assertEquals($result->getMessage(), "Internal handler");
 
-        // order handlers
-        $people = new People();
-        $people->addHandler(function() {
+        // сначала выполняются внутрение, затем динамические
+        $model = new HandlerTest();
+        $model->addHandler(function() {
             throw new HandlerException("Handler 1");
         });
-        $people->addHandler(function() {
+        $this->assertEquals($model->handle()->getMessage(), "Internal handler");
+
+        // но можно пролезть вперед всех
+        $model->addHandler(function() {
             throw new HandlerException("Handler 2");
         }, true);
-        $people->addHandler(function() {
-            throw new HandlerException("Handler 3");
-        });
-
-        $this->assertEquals($people->handle()->getMessage(), "Handler 2");
+        $this->assertEquals($model->handle()->getMessage(), "Handler 2");
     }
 }
