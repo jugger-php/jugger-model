@@ -10,14 +10,11 @@ use jugger\model\handler\HandlerException;
  */
 trait ModelHandlerTrait
 {
-    private $_handlers = [];
+    private $_handlers;
 
     public function handle(): HandleResult
     {
-        $handlers = array_merge(
-            $this->_handlers,
-            static::getHandlers()
-        );
+        $handlers = $this->_handlers ?? static::getHandlers();
         foreach ($handlers as $handler) {
             try {
                 $handler($this);
@@ -36,6 +33,10 @@ trait ModelHandlerTrait
 
     public function addHandler(\Closure $handler, bool $prepend = false)
     {
+        if (is_null($this->_handlers)) {
+            $this->_handlers = static::getHandlers();
+        }
+
         if ($prepend) {
             array_unshift($this->_handlers, $handler);
         }
