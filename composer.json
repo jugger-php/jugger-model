@@ -1,0 +1,13 @@
+{
+    "name": "jugger-php/jugger-model",
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "jugger\\model\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^7.0.9",
+        "jugger-php/jugger-base": "^1"
+    }
+}
