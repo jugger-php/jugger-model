@@ -309,8 +309,9 @@ class FieldTest extends TestCase
         $field->setValue("04.01.2017");
         $this->assertEquals($field->getValue(), "2017-01-04");
 
+        // данное значение воспринимается как время, а не дата
         $field->setValue("4.1.17");
-        $this->assertEquals($field->getValue(), "2017-01-04");
+        $this->assertEquals($field->getValue(), date('Y-m-d'));
 
         $field->setValue(1483524098);
         $this->assertEquals($field->getValue(), "2017-01-04");
@@ -360,7 +361,7 @@ class FieldTest extends TestCase
         $this->assertEquals($field->getValue(), $time);
 
         $field->setValue("4.1.17");
-        $this->assertEquals($field->getValue(), (new \DateTime("2017-01-04 04:01:17"))->getTimestamp());
+        $this->assertEquals($field->getValue(), (new \DateTime("04:01:17"))->getTimestamp());
 
         $field->setValue(1483484400);
         $this->assertEquals($field->getValue(), $time);
