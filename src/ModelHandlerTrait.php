@@ -2,6 +2,9 @@
 
 namespace jugger\model;
 
+use jugger\model\handler\HandleResult;
+use jugger\model\handler\HandlerException;
+
 /**
  * Трейт отвечающий за обработку модели
  */
@@ -9,18 +12,21 @@ trait ModelHandlerTrait
 {
     private $_handlers = [];
 
-    public function handle(): bool
+    public function handle(): HandleResult
     {
         $handlers = array_merge(
             $this->_handlers,
             static::getHandlers()
         );
         foreach ($handlers as $handler) {
-            if ($handler($this) === false) {
-                return false;
+            try {
+                $handler($this);
+            }
+            catch (HandlerException $ex) {
+                return new HandleResult($ex);
             }
         }
-        return true;
+        return new HandleResult();
     }
 
     public static function getHandlers()
