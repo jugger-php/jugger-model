@@ -8,9 +8,10 @@ abstract class Model implements \ArrayAccess
 {
     use ArrayAccessTrait;
     use ModelAccessTrait;
+    use ModelHandlerTrait;
+    use ModelValidateTrait;
 
     private $_fields;
-    private $_errors;
 
     public function __construct(array $values = [])
     {
@@ -74,26 +75,4 @@ abstract class Model implements \ArrayAccess
     }
 
     abstract public static function getSchema();
-
-    public function validate()
-    {
-        $this->_errors = [];
-        $fields = $this->getFields();
-        foreach ($fields as $name => $field) {
-            if (!$field->validate()) {
-                $this->_errors[$name] = $field->getError();
-            }
-        }
-        return empty($this->_errors);
-    }
-
-    public function getErrors()
-    {
-        return $this->_errors;
-    }
-
-    public function getError(string $fieldName)
-    {
-        return $this->getErrors()[$fieldName] ?? null;
-    }
 }
