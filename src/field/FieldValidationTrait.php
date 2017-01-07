@@ -2,6 +2,8 @@
 
 namespace jugger\model\field;
 
+use jugger\model\validator\BaseValidator;
+
 trait FieldValidationTrait
 {
     protected $_error;
@@ -9,7 +11,7 @@ trait FieldValidationTrait
 
     public function addValidator(BaseValidator $validator)
     {
-        $validator->field = $this;
+        $validator->setField($this);
         $this->_validators[] = $validator;
     }
 
