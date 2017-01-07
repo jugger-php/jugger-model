@@ -10,7 +10,6 @@ abstract class BaseField
 
     protected $_name;
     protected $_value;
-    protected $_model;
 
     public function __construct(array $config = [])
     {
@@ -78,18 +77,4 @@ abstract class BaseField
     }
 
     abstract protected function prepareValue($value);
-
-    /*
-     * model
-     */
-
-    public function setModel(Model $model)
-    {
-        $this->_model = $model;
-    }
-
-    public function getModel(): Model
-    {
-        return $this->_model;
-    }
 }
