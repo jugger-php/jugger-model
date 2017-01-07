@@ -14,6 +14,16 @@ trait FieldValidationTrait
         $this->_validators[] = $validator;
     }
 
+    public function existValidator(string $validatorClass)
+    {
+        foreach ($this->_validators as $validator) {
+            if ($validatorClass == get_class($validator)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function addValidators(array $validators)
     {
         foreach ($validators as $validator) {
