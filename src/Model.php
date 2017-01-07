@@ -2,6 +2,7 @@
 
 namespace jugger\model;
 
+use jugger\model\field\BaseField;
 use jugger\base\ArrayAccessTrait;
 
 abstract class Model implements \ArrayAccess
@@ -38,7 +39,7 @@ abstract class Model implements \ArrayAccess
         }
     }
 
-    public function getValues()
+    public function getValues(): array
     {
         $values = [];
         foreach ($this->getFields() as $name => $field) {
@@ -47,13 +48,13 @@ abstract class Model implements \ArrayAccess
         return $values;
     }
 
-    public function existsField(string $name)
+    public function existsField(string $name): bool
     {
         $fields = $this->getFields();
         return isset($fields[$name]);
     }
 
-    public function getField(string $name)
+    public function getField(string $name): BaseField
     {
         if ($this->existsField($name)) {
             return $this->getFields()[$name];
@@ -61,12 +62,13 @@ abstract class Model implements \ArrayAccess
         throw new \Exception("Field '{$name}' not exists");
     }
 
-    public function getFields()
+    public function getFields(): array
     {
         if (empty($this->_fields)) {
             $this->_fields = [];
             $schema = static::getSchema();
             foreach ($schema as $field) {
+                $field->setModel($this);
                 $name = $field->getName();
                 $this->_fields[$name] = $field;
             }
@@ -74,5 +76,5 @@ abstract class Model implements \ArrayAccess
         return $this->_fields;
     }
 
-    abstract public static function getSchema();
+    abstract public static function getSchema(): array;
 }
