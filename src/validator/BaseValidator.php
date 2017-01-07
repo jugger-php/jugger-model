@@ -6,11 +6,16 @@ use jugger\model\Model;
 
 abstract class BaseValidator
 {
-    protected $model;
+    protected $_field;
 
-    public function setModel(Model $model)
+    public function setField(Field $field)
     {
-        $this->model = $model;
+        $this->_field = $field;
+    }
+
+    public function getField()
+    {
+        return $this->_field;
     }
 
     abstract public function validate($value): bool;
