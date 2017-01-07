@@ -2,8 +2,6 @@
 
 namespace jugger\model\field;
 
-use jugger\model\Model;
-
 abstract class BaseField
 {
     use FieldValidationTrait;
