@@ -2,16 +2,15 @@
 
 namespace jugger\model\field;
 
-use jugger\model\validator\ValidationTrait;
+use jugger\model\Model;
 
 abstract class BaseField
 {
-    use ValidationTrait;
-
-    public $model;
+    use FieldValidationTrait;
 
     protected $_name;
     protected $_value;
+    protected $_model;
 
     public function __construct(array $config = [])
     {
@@ -26,6 +25,10 @@ abstract class BaseField
         // pass
     }
 
+    /*
+     * name
+     */
+
     public function initName($name)
     {
         if (is_string($name) && !empty($name)) {
@@ -36,12 +39,28 @@ abstract class BaseField
         }
     }
 
+    public function getName()
+    {
+        return $this->_name;
+    }
+
+    /*
+     * validators
+     */
+
     protected function initValidators(array $validators)
     {
-        foreach ($validators as $validator) {
-            $this->addValidator($validator);
-        }
+        $this->addValidators($validators);
     }
+
+    public function validate()
+    {
+        return $this->validateValue($this->getValue());
+    }
+
+    /*
+     * value
+     */
 
     public function setValue($value)
     {
@@ -58,15 +77,19 @@ abstract class BaseField
         return $this->_value;
     }
 
-    public function getName()
-    {
-        return $this->_name;
-    }
-
-    public function validate()
-    {
-        return $this->validateValue($this->getValue());
-    }
-
     abstract protected function prepareValue($value);
+
+    /*
+     * model
+     */
+
+    public function setModel(Model $model)
+    {
+        $this->_model = $model;
+    }
+
+    public function getModel(): Model
+    {
+        return $this->_model;
+    }
 }
