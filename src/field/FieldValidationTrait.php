@@ -11,7 +11,6 @@ trait FieldValidationTrait
 
     public function addValidator(BaseValidator $validator)
     {
-        $validator->setField($this);
         $this->_validators[] = $validator;
     }
 
