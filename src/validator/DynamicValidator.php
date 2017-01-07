@@ -2,7 +2,7 @@
 
 namespace jugger\model\validator;
 
-class DynamicValidator implements ValidatorInterface
+class DynamicValidator extends BaseValidator
 {
     protected $callback;
 

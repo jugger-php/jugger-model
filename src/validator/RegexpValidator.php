@@ -2,7 +2,7 @@
 
 namespace jugger\model\validator;
 
-class RegexpValidator implements ValidatorInterface
+class RegexpValidator extends BaseValidator
 {
     protected $pattern;
 

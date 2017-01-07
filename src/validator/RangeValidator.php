@@ -2,7 +2,7 @@
 
 namespace jugger\model\validator;
 
-class RangeValidator implements ValidatorInterface
+class RangeValidator extends BaseValidator
 {
     protected $min;
     protected $max;

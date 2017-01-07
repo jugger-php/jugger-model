@@ -2,7 +2,7 @@
 
 namespace jugger\model\validator;
 
-class CompareValidator implements ValidatorInterface
+class CompareValidator extends BaseValidator
 {
     protected $operator;
     protected $compareValue;

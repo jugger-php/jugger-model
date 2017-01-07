@@ -2,7 +2,7 @@
 
 namespace jugger\model\validator;
 
-class RequireValidator implements ValidatorInterface
+class RequireValidator extends BaseValidator
 {
     public function validate($value): bool
     {

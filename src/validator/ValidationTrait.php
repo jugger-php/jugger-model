@@ -5,9 +5,9 @@ namespace jugger\model\validator;
 trait ValidationTrait
 {
     protected $_error;
-    protected $_validators;
+    protected $_validators = [];
 
-    public function addValidator(ValidatorInterface $validator)
+    public function addValidator(BaseValidator $validator)
     {
         $this->_validators[] = $validator;
     }
