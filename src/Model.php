@@ -75,5 +75,5 @@ abstract class Model implements \ArrayAccess
         return $this->_fields;
     }
 
-    abstract public static function getSchema(Model $model): array;
+    abstract public static function getSchema(Model $model = null): array;
 }
