@@ -14,7 +14,7 @@ use jugger\model\validator\DynamicValidator;
 
 class People extends Model
 {
-    public static function getSchema(Model $model): array
+    public static function getSchema(Model $model = null): array
     {
         return [
             new IntField([
@@ -56,7 +56,7 @@ class People extends Model
 
 class HandlerTest extends Model
 {
-    public static function getSchema(Model $model): array
+    public static function getSchema(Model $model = null): array
     {
         return [];
     }
