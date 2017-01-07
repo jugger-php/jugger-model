@@ -2,6 +2,8 @@
 
 namespace jugger\model\validator;
 
+use jugger\model\Model;
+
 class RepeatValidator extends BaseValidator
 {
     protected $model;
