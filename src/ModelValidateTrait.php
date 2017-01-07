@@ -14,6 +14,7 @@ trait ModelValidateTrait
         $this->_errors = [];
         $fields = $this->getFields();
         foreach ($fields as $name => $field) {
+            $field->setModel($this);
             if (!$field->validate()) {
                 $this->_errors[$name] = $field->getError();
             }
