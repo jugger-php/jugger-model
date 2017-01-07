@@ -66,7 +66,7 @@ abstract class Model implements \ArrayAccess
     {
         if (empty($this->_fields)) {
             $this->_fields = [];
-            $schema = static::getSchema();
+            $schema = static::getSchema($this);
             foreach ($schema as $field) {
                 $name = $field->getName();
                 $this->_fields[$name] = $field;
@@ -75,5 +75,5 @@ abstract class Model implements \ArrayAccess
         return $this->_fields;
     }
 
-    abstract public static function getSchema(): array;
+    abstract public static function getSchema(Model $model): array;
 }
