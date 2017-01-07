@@ -8,6 +8,8 @@ abstract class BaseField
 {
     use ValidationTrait;
 
+    public $model;
+
     protected $_name;
     protected $_value;
 
