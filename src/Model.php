@@ -14,6 +14,8 @@ abstract class Model implements \ArrayAccess
 
     private $_fields;
 
+    abstract public static function getSchema(): array;
+
     public function __construct(array $values = [])
     {
         $this->init();
@@ -81,5 +83,23 @@ abstract class Model implements \ArrayAccess
         return $this->_fields;
     }
 
-    abstract public static function getSchema(): array;
+    public static function getLabel(string $name): string
+    {
+        return static::getLabels()[$name] ?? $name;
+    }
+
+    public static function getLabels(): array
+    {
+        return [];
+    }
+
+    public static function getHint(string $name): string
+    {
+        return static::getHints()[$name] ?? "";
+    }
+
+    public static function getHints(): array
+    {
+        return [];
+    }
 }
