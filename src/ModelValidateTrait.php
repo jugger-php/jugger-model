@@ -15,7 +15,9 @@ trait ModelValidateTrait
         $fields = $this->getFields();
         foreach ($fields as $name => $field) {
             if (!$field->validate()) {
-                $this->_errors[$name] = $field->getError();
+                $label = static::getLabel($name);
+                $error = $field->getError();
+                $this->_errors[$name] = "Поле '{$label}': {$error}";
             }
         }
         return empty($this->_errors);
