@@ -26,7 +26,7 @@ class DatetimeField extends BaseField
         }
     }
 
-    public function getObject()
+    public function getObject(): \DateTime
     {
         return \DateTime::createFromFormat($this->format, $this->getValue());
     }

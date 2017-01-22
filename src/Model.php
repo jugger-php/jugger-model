@@ -16,7 +16,13 @@ abstract class Model implements \ArrayAccess
 
     public function __construct(array $values = [])
     {
+        $this->init();
         $this->setValues($values);
+    }
+
+    protected function init()
+    {
+        // pass
     }
 
     public function setValue(string $name, $value)
@@ -75,5 +81,5 @@ abstract class Model implements \ArrayAccess
         return $this->_fields;
     }
 
-    abstract public static function getSchema(Model $model = null): array;
+    abstract public static function getSchema(): array;
 }

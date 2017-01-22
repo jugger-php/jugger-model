@@ -8,13 +8,14 @@ use jugger\model\field\TextField;
 use jugger\model\field\EnumField;
 use jugger\model\field\BoolField;
 use jugger\model\handler\HandlerException;
+use jugger\model\validator\ValidatorMessage;
 use jugger\model\validator\RangeValidator;
 use jugger\model\validator\RequireValidator;
 use jugger\model\validator\DynamicValidator;
 
 class People extends Model
 {
-    public static function getSchema(Model $model = null): array
+    public static function getSchema(): array
     {
         return [
             new IntField([
@@ -56,12 +57,12 @@ class People extends Model
 
 class HandlerTest extends Model
 {
-    public static function getSchema(Model $model = null): array
+    public static function getSchema(): array
     {
         return [];
     }
 
-    public static function getHandlers()
+    public static function getHandlers(): array
     {
         return [
             function() {
@@ -151,25 +152,37 @@ class ModelTest extends TestCase
 
         $superman->age = 666;
         $this->assertFalse($superman->validate());
-        $this->assertEquals($superman->getError('age'), RangeValidator::class);
+        $this->assertEquals(
+            $superman->getError('age'),
+            "Поле 'age': значение должно быть в диапазоне от 3 до 150"
+        );
 
         $superman->fio = 'Кларк Джозеф Кент';
         $this->assertFalse($superman->validate());
-        $this->assertEquals($superman->getError('fio'), RangeValidator::class);
+        $this->assertEquals(
+            $superman->getError('fio'),
+            "Поле 'fio': значение должно быть в диапазоне от 1 до 15"
+        );
 
         $superman->sex = null;
         $this->assertFalse($superman->validate());
-        $this->assertEquals($superman->getError('sex'), RequireValidator::class);
+        $this->assertEquals(
+            $superman->getError('sex'),
+            "Поле 'sex': обязательно для заполнения"
+        );
 
         $superman->is_superman = false;
         $this->assertFalse($superman->validate());
-        $this->assertEquals($superman->getError('is_superman'), DynamicValidator::class);
+        $this->assertEquals(
+            $superman->getError('is_superman'),
+            "Поле 'is_superman': jugger\\model\\validator\\DynamicValidator"
+        );
 
         $errors = $superman->getErrors();
-        $this->assertEquals($errors['age'], RangeValidator::class);
-        $this->assertEquals($errors['fio'], RangeValidator::class);
-        $this->assertEquals($errors['sex'], RequireValidator::class);
-        $this->assertEquals($errors['is_superman'], DynamicValidator::class);
+        $this->assertEquals($errors['age'], "Поле 'age': значение должно быть в диапазоне от 3 до 150");
+        $this->assertEquals($errors['fio'], "Поле 'fio': значение должно быть в диапазоне от 1 до 15");
+        $this->assertEquals($errors['sex'], "Поле 'sex': обязательно для заполнения");
+        $this->assertEquals($errors['is_superman'], "Поле 'is_superman': jugger\\model\\validator\\DynamicValidator");
     }
 
     public function testHandlers()

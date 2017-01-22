@@ -14,12 +14,12 @@ class HandleResult
         $this->_exception = $exception;
     }
 
-    public function getException()
+    public function getException(): HandlerException
     {
         return $this->_exception;
     }
 
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->isSuccess() ? "success" : $this->_exception->getMessage();
     }

@@ -13,6 +13,7 @@ class RepeatValidator extends BaseValidator
     {
         $this->model = $model;
         $this->fieldName = $fieldName;
+        $this->message = "значение должно совпадать с полем '{$fieldName}'";
     }
 
     public function validate($value): bool

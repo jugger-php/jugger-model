@@ -7,9 +7,9 @@ namespace jugger\model;
  */
 trait ModelValidateTrait
 {
-    private $_errors;
+    private $_errors = [];
 
-    public function validate()
+    public function validate(): bool
     {
         $this->_errors = [];
         $fields = $this->getFields();
@@ -21,7 +21,7 @@ trait ModelValidateTrait
         return empty($this->_errors);
     }
 
-    public function getErrors()
+    public function getErrors(): array
     {
         return $this->_errors;
     }

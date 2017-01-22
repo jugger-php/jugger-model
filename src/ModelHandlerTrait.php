@@ -26,7 +26,7 @@ trait ModelHandlerTrait
         return new HandleResult();
     }
 
-    public static function getHandlers()
+    public static function getHandlers(): array
     {
         return [];
     }

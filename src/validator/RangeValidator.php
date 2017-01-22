@@ -10,7 +10,8 @@ class RangeValidator extends BaseValidator
     public function __construct(int $min, int $max = null)
     {
         $this->min = $min;
-        $this->max = (int) $max;
+        $this->max = $max ?? 0;
+        $this->message = "значение должно быть в диапазоне от {$min}". ($max ? " до {$max}" : "");
     }
 
     public function validate($value): bool

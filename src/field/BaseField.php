@@ -11,10 +11,11 @@ abstract class BaseField
 
     public function __construct(array $config = [])
     {
-        $this->initName($config['name'] ?? null);
-        $this->setValue($config['value'] ?? null);
-        $this->initValidators($config['validators'] ?? []);
+        $this->setName($config['name'] ?? null);
+
         $this->init($config);
+        $this->setValue($config['value'] ?? null);
+        $this->addValidators($config['validators'] ?? []);
     }
 
     public function init(array $config)
@@ -26,7 +27,7 @@ abstract class BaseField
      * name
      */
 
-    public function initName($name)
+    protected function setName($name)
     {
         if (is_string($name) && !empty($name)) {
             $this->_name = $name;
@@ -36,7 +37,7 @@ abstract class BaseField
         }
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->_name;
     }
@@ -45,12 +46,7 @@ abstract class BaseField
      * validators
      */
 
-    protected function initValidators(array $validators)
-    {
-        $this->addValidators($validators);
-    }
-
-    public function validate()
+    public function validate(): bool
     {
         return $this->validateValue($this->getValue());
     }

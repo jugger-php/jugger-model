@@ -9,6 +9,7 @@ class CompareValidator extends BaseValidator
 
     public function __construct(string $operator, $compareValue)
     {
+        $this->message = "значение должно быть '{$operator} {$compareValue}'";
         $this->operator = $operator;
         $this->compareValue = $compareValue;
     }

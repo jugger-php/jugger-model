@@ -48,7 +48,10 @@ class ValidatorTest extends TestCase
 
         $field->setValue(null);
         $this->assertFalse($field->validate());
-        $this->assertEquals(RequireValidator::class, $field->getError());
+        $this->assertEquals(
+            $field->getError(),
+            "Поле 'test': обязательно для заполнения"
+        );
 
         $field->setValue([]);
         $this->assertTrue($field->validate());
@@ -75,7 +78,10 @@ class ValidatorTest extends TestCase
 
         $field->setValue(null);
         $this->assertFalse($field->validate());
-        $this->assertEquals(EmailValidator::class, $field->getError());
+        $this->assertEquals(
+            $field->getError(),
+            "Поле 'test': значение должно быть валидным email-адресом"
+        );
 
         // true
 
@@ -122,7 +128,10 @@ class ValidatorTest extends TestCase
 
         $field->setValue(null);
         $this->assertFalse($field->validate());
-        $this->assertEquals(RangeValidator::class, $field->getError());
+        $this->assertEquals(
+            $field->getError(),
+            "Поле 'test': значение должно быть в диапазоне от 0"
+        );
 
         /**
          * strings
@@ -290,5 +299,19 @@ class ValidatorTest extends TestCase
             $field->setValue($x);
             $this->assertFalse($field->validate());
         }
+    }
+
+    public function testCompareMessage()
+    {
+        $field = new AnyField([
+            'name' => 'test',
+            'value' => 123,
+        ]);
+        $field->addValidator(new CompareValidator('>', 456));
+        $this->assertFalse($field->validate());
+        $this->assertEquals(
+            $field->getError(),
+            "Поле 'test': значение должно быть '> 456'"
+        );
     }
 }

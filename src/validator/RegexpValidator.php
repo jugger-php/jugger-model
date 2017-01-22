@@ -9,6 +9,7 @@ class RegexpValidator extends BaseValidator
     public function __construct(string $pattern)
     {
         $this->pattern = $pattern;
+        $this->message = "значение должно подходить под шаблон '{$pattern}'";
     }
 
     public function validate($value): bool

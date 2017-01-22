@@ -12,7 +12,7 @@ class EnumField extends BaseField
 
         $values = $config['values'] ?? null;
         if (empty($values)) {
-            throw new \Exception("Property 'values' is required for 'EnumField'");
+            throw new \Exception("Property 'values' is required for 'jugger\model\field\EnumField'");
         }
         else {
             $this->_availValues = (array) $values;

@@ -14,7 +14,7 @@ trait FieldValidationTrait
         $this->_validators[] = $validator;
     }
 
-    public function existValidator(string $validatorClass)
+    public function existValidator(string $validatorClass): bool
     {
         foreach ($this->_validators as $validator) {
             if ($validatorClass == get_class($validator)) {
@@ -31,22 +31,22 @@ trait FieldValidationTrait
         }
     }
 
-    public function getError()
+    public function getError(): string
     {
-        return $this->_error;
+        return "Поле '{$this->getName()}': {$this->_error}";
     }
 
-    public function getValidators()
+    public function getValidators(): array
     {
         return $this->_validators;
     }
 
-    protected function validateValue($value)
+    protected function validateValue($value): bool
     {
         $this->_error = null;
         foreach ($this->_validators as $validator) {
             if (!$validator->validate($value)) {
-                $this->_error = get_class($validator);
+                $this->_error = $validator->getMessage();
                 return false;
             }
         }
