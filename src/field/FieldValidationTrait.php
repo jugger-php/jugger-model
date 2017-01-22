@@ -33,7 +33,7 @@ trait FieldValidationTrait
 
     public function getError(): string
     {
-        return "Поле '{$this->getName()}': {$this->_error}";
+        return $this->_error;
     }
 
     public function getValidators(): array
