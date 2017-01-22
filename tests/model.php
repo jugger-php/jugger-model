@@ -53,13 +53,20 @@ class People extends Model
             ]),
         ];
     }
-}
 
-class HandlerTest extends Model
-{
-    public static function getSchema(): array
+    public static function getHints(): array
     {
-        return [];
+        return [
+            'is_superman' => 'Если человек супермен, это не скрыть никак',
+        ];
+    }
+
+    public static function getLabels(): array
+    {
+        return [
+            'age' => 'Возраcт',
+            'sex' => 'Пол',
+        ];
     }
 
     public static function getHandlers(): array
@@ -154,7 +161,7 @@ class ModelTest extends TestCase
         $this->assertFalse($superman->validate());
         $this->assertEquals(
             $superman->getError('age'),
-            "Поле 'age': значение должно быть в диапазоне от 3 до 150"
+            "Поле 'Возраcт': значение должно быть в диапазоне от 3 до 150"
         );
 
         $superman->fio = 'Кларк Джозеф Кент';
@@ -168,7 +175,7 @@ class ModelTest extends TestCase
         $this->assertFalse($superman->validate());
         $this->assertEquals(
             $superman->getError('sex'),
-            "Поле 'sex': обязательно для заполнения"
+            "Поле 'Пол': обязательно для заполнения"
         );
 
         $superman->is_superman = false;
@@ -179,40 +186,85 @@ class ModelTest extends TestCase
         );
 
         $errors = $superman->getErrors();
-        $this->assertEquals($errors['age'], "Поле 'age': значение должно быть в диапазоне от 3 до 150");
+        $this->assertEquals($errors['age'], "Поле 'Возраcт': значение должно быть в диапазоне от 3 до 150");
         $this->assertEquals($errors['fio'], "Поле 'fio': значение должно быть в диапазоне от 1 до 15");
-        $this->assertEquals($errors['sex'], "Поле 'sex': обязательно для заполнения");
+        $this->assertEquals($errors['sex'], "Поле 'Пол': обязательно для заполнения");
         $this->assertEquals($errors['is_superman'], "Поле 'is_superman': jugger\\model\\validator\\DynamicValidator");
+    }
+
+    public function testAdditionalAttrs()
+    {
+        $superman = new People();
+
+        // labels
+        $this->assertEquals(
+            "Возраcт",
+            $superman::getLabel('age')
+        );
+        $this->assertEquals(
+            "fio",
+            $superman::getLabel('fio')
+        );
+        $this->assertEquals(
+            "Пол",
+            $superman::getLabel('sex')
+        );
+        $this->assertEquals(
+            "is_superman",
+            $superman::getLabel('is_superman')
+        );
+
+        // hints
+        $this->assertEquals(
+            "",
+            $superman::getHint('age')
+        );
+        $this->assertEquals(
+            "",
+            $superman::getHint('fio')
+        );
+        $this->assertEquals(
+            "",
+            $superman::getHint('sex')
+        );
+        $this->assertEquals(
+            "Если человек супермен, это не скрыть никак",
+            $superman::getHint('is_superman')
+        );
     }
 
     public function testHandlers()
     {
+        $emptyModel = new class extends Model
+        {
+            public static function getSchema(): array
+            {
+                return [];
+            }
+        };
         // empty handler
-        $people = new People();
-        $this->assertTrue($people->handle()->isSuccess());
-
+        $this->assertTrue($emptyModel->handle()->isSuccess());
         // good handler
-        $people = new People();
-        $people->addHandler(function(People $people){});
-        $this->assertTrue($people->handle()->isSuccess());
+        $emptyModel->addHandler(function($emptyModel){});
+        $this->assertTrue($emptyModel->handle()->isSuccess());
 
         // bad handler
-        $model = new HandlerTest();
-        $result = $model->handle();
+        $people = new People();
+        $result = $people->handle();
         $this->assertFalse($result->isSuccess());
         $this->assertEquals($result->getMessage(), "Internal handler");
 
         // сначала выполняются внутрение, затем динамические
-        $model = new HandlerTest();
-        $model->addHandler(function() {
+        $people = new People();
+        $people->addHandler(function() {
             throw new HandlerException("Handler 1");
         });
-        $this->assertEquals($model->handle()->getMessage(), "Internal handler");
+        $this->assertEquals($people->handle()->getMessage(), "Internal handler");
 
         // но можно пролезть вперед всех
-        $model->addHandler(function() {
+        $people->addHandler(function() {
             throw new HandlerException("Handler 2");
         }, true);
-        $this->assertEquals($model->handle()->getMessage(), "Handler 2");
+        $this->assertEquals($people->handle()->getMessage(), "Handler 2");
     }
 }
