@@ -50,7 +50,7 @@ class ValidatorTest extends TestCase
         $this->assertFalse($field->validate());
         $this->assertEquals(
             $field->getError(),
-            "Поле 'test': обязательно для заполнения"
+            "обязательно для заполнения"
         );
 
         $field->setValue([]);
@@ -80,7 +80,7 @@ class ValidatorTest extends TestCase
         $this->assertFalse($field->validate());
         $this->assertEquals(
             $field->getError(),
-            "Поле 'test': значение должно быть валидным email-адресом"
+            "значение должно быть валидным email-адресом"
         );
 
         // true
@@ -130,7 +130,7 @@ class ValidatorTest extends TestCase
         $this->assertFalse($field->validate());
         $this->assertEquals(
             $field->getError(),
-            "Поле 'test': значение должно быть в диапазоне от 0"
+            "значение должно быть в диапазоне от 0"
         );
 
         /**
@@ -311,7 +311,7 @@ class ValidatorTest extends TestCase
         $this->assertFalse($field->validate());
         $this->assertEquals(
             $field->getError(),
-            "Поле 'test': значение должно быть '> 456'"
+            "значение должно быть '> 456'"
         );
     }
 }
