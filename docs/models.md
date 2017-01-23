@@ -8,6 +8,8 @@
 
 Минимальный код, для работы с моделью выглядит так:
 ```php
+use jugger\model\Model;
+
 class People extends Model
 {
     public static function getSchema(): array
@@ -219,3 +221,113 @@ class People extends Model
 ```
 
 ## Работа с моделью
+
+После того как модель создана можно приступать к работе:
+```php
+// create
+$superman = new People([
+    'age' => 78,
+    'fio' => 'Кларк Кент',
+    'sex' => 'man',
+    'is_superman' => true,
+]);
+
+// get
+$age = $superman->age;
+$age = $superman['age'];
+$age = $superman->getValue('age');
+
+// set
+$superman->age = 123;
+$superman['age'] = 123;
+$superman->setValue('age', 123);
+
+// isset
+isset($superman['age']);
+$superman->existsField('age'); // true
+$superman->existsField('404 field'); // false
+
+// unset
+unset($superman['age']);
+is_null($superman['age']); // true
+
+/**
+ * "грязная" множественая запись - атрибуты которых нет, не будут записаны в модель
+ */
+$superman->setValues([
+    'age'   => '456',
+    'key'   => 'value',
+    1234    => new stdClass,
+]);
+
+/*
+$values = [
+    'age' => 456,
+    'fio' => 'Кларк Кент',
+    'sex' => 'man',
+    'is_superman' => true,
+]
+ */
+$values = $superman->getValues();
+
+/*
+Labels & Hints
+Обратите внимание, что это статические методы, доступ через ::
+ */
+$superman::getLabel('age'); // Возраcт
+$superman::getLabel('is_superman'); // is_superman
+$superman::getLabel('not found label'); // not found label
+
+$superman::getHint('age'); // ""
+$superman::getHint('is_superman'); // Если человек супермен, это не скрыть никак
+$superman::getHint('not found label'); // ""
+
+/*
+Валидация
+ */
+if ($superman->validate()) {
+    // success
+}
+else {
+    $errors = $superman->getErrors();
+    echo $errors['age']; // Поле 'Возраcт': значение должно быть в диапазоне от 3 до 150
+}
+
+/*
+Обработчики, могут быть как внутреними так и динамическими
+ */
+$superman->addHandler(function(People $model) {
+    // handler 1
+});
+$superman->addHandler(function(People $model) {
+    // handler 2
+});
+
+$result = $superman->handle();
+if ($result->isSuccess()) {
+    // выполнились оба обработчика
+}
+else {
+    // ошибка одного из обработчиков
+    // после возникновения ошибки
+    // далее обработка не идет
+    $errorMessage = $result->getMessage();
+}
+
+
+/*
+Обработчики + Валидация (или как правильно делать)
+ */
+if ($superman->validate()) {
+    $message = $superman->handle()->getMessage();
+    if ($message == 'success') {
+        // success - данные валидны и обработаны
+    }
+    else {
+        $errors = [$message];
+    }
+}
+else {
+    $errors = $superman->getErorrs();
+}
+```
