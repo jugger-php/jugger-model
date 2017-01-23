@@ -99,7 +99,7 @@ class People extends Model
 
 ### Hints & Labels
 
-Для удобства работы и отображения (что скорее), можно также добавить для полей названия (labels) и подсказки (hints).
+Для удобства работы и отображения, можно также добавить для полей названия (labels) и подсказки (hints).
 ```php
 class People extends Model
 {
@@ -153,6 +153,15 @@ class People extends Model
 
 В итоге полученный класс имеет вид:
 ```php
+use jugger\model\Model;
+use jugger\model\field\IntField;
+use jugger\model\field\TextField;
+use jugger\model\field\EnumField;
+use jugger\model\field\BoolField;
+use jugger\model\validator\RangeValidator;
+use jugger\model\validator\RequireValidator;
+use jugger\model\validator\DynamicValidator;
+
 class People extends Model
 {
     public static function getSchema(): array
@@ -294,14 +303,25 @@ else {
 }
 
 /*
-Обработчики, могут быть как внутреними так и динамическими
+Обработчики, могут быть как внутреними так и динамическими:
+- внутренние находятся в самой модели
+- динамические добавляются к конкретному экземпляру
  */
 $superman->addHandler(function(People $model) {
     // handler 1
 });
+// 3-ий параметр 'prepend' добавляет обработчик в начало списка
 $superman->addHandler(function(People $model) {
     // handler 2
-});
+}, true);
+
+/*
+Список обработчиков выглядит так:
+1. handler 2 (в экземпляре)
+2. добавляем в базу запись (в моделе)
+3. логгируем действие пользователя (в моделе)
+4. handler 1 (в экземпляре)
+ */
 
 $result = $superman->handle();
 if ($result->isSuccess()) {
