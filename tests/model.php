@@ -8,7 +8,6 @@ use jugger\model\field\TextField;
 use jugger\model\field\EnumField;
 use jugger\model\field\BoolField;
 use jugger\model\handler\HandlerException;
-use jugger\model\validator\ValidatorMessage;
 use jugger\model\validator\RangeValidator;
 use jugger\model\validator\RequireValidator;
 use jugger\model\validator\DynamicValidator;
