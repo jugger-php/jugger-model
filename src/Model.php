@@ -102,4 +102,21 @@ abstract class Model implements \ArrayAccess
     {
         return [];
     }
+
+    public function process(): array
+    {
+        if (!$this->validate()) {
+            return $this->getErrors();
+        }
+
+        $result = $this->handle();
+        if ($result->isSuccess()) {
+            return [];
+        }
+        else {
+            return [
+                'handlers' => $result->getMessage(),
+            ];
+        }
+    }
 }

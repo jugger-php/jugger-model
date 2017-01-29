@@ -43,6 +43,7 @@ class People extends Model
             ]),
             new BoolField([
                 'name' => 'is_superman',
+                'value' => false,
                 'validators' => [
                     // только супермены
                     new DynamicValidator(function(bool $value) {
@@ -265,5 +266,27 @@ class ModelTest extends TestCase
             throw new HandlerException("Handler 2");
         }, true);
         $this->assertEquals($people->handle()->getMessage(), "Handler 2");
+    }
+
+    public function testProcess()
+    {
+        $superman = new People();
+        $errors = $superman->process();
+        $this->assertTrue(count($errors) == 4);
+
+        $superman->setValues([
+            'age' => 666,
+            'fio' => 'Кларк Кент',
+            'sex' => 'man',
+            'is_superman' => true,
+        ]);
+        $errors = $superman->process();
+        $this->assertTrue(count($errors) == 1);
+        $this->assertTrue(isset($errors['age']));
+
+        $superman->age = 75;
+        $errors = $superman->process();
+        $this->assertTrue(count($errors) == 1);
+        $this->assertEquals($errors['handlers'], 'Internal handler');
     }
 }
