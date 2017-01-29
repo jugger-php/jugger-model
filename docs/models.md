@@ -338,16 +338,12 @@ else {
 /*
 Обработчики + Валидация (или как правильно делать)
  */
-if ($superman->validate()) {
-    $message = $superman->handle()->getMessage();
-    if ($message == 'success') {
-        // success - данные валидны и обработаны
-    }
-    else {
-        $errors = [$message];
-    }
+$errors = $superman->process();
+if (empty($errors)) {
+    // success
 }
 else {
-    $errors = $superman->getErorrs();
+    // $errors['attributeName'] - ошибка валидации атрибута
+    // $errors['handlers'] - ошибка обработки модели
 }
 ```
