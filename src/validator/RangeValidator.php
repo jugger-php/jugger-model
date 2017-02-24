@@ -14,6 +14,16 @@ class RangeValidator extends BaseValidator
         $this->message = "значение должно быть в диапазоне от {$min}". ($max ? " до {$max}" : "");
     }
 
+    public function getMin()
+    {
+        return $this->min;
+    }
+
+    public function getMax()
+    {
+        return $this->max;
+    }
+
     public function validate($value): bool
     {
         $max = $this->max;
