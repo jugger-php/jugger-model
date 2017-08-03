@@ -23,10 +23,6 @@ abstract class BaseField
         // pass
     }
 
-    /*
-     * name
-     */
-
     protected function setName($name)
     {
         if (is_string($name) && !empty($name)) {
@@ -42,18 +38,10 @@ abstract class BaseField
         return $this->_name;
     }
 
-    /*
-     * validators
-     */
-
     public function validate(): bool
     {
         return $this->validateValue($this->getValue());
     }
-
-    /*
-     * value
-     */
 
     public function setValue($value)
     {

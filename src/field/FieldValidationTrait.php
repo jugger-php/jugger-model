@@ -2,14 +2,14 @@
 
 namespace jugger\model\field;
 
-use jugger\model\validator\BaseValidator;
+use jugger\validator\BaseValidator;
 
 trait FieldValidationTrait
 {
     protected $_error;
     protected $_validators = [];
 
-    public function addValidator(BaseValidator $validator)
+    public function addValidator(BaseValidator $validator): void
     {
         $this->_validators[] = $validator;
     }
@@ -24,14 +24,14 @@ trait FieldValidationTrait
         return false;
     }
 
-    public function addValidators(array $validators)
+    public function addValidators(array $validators): void
     {
         foreach ($validators as $validator) {
             $this->addValidator($validator);
         }
     }
 
-    public function getError(): string
+    public function getError(): ?BaseValidator
     {
         return $this->_error;
     }
@@ -46,7 +46,7 @@ trait FieldValidationTrait
         $this->_error = null;
         foreach ($this->_validators as $validator) {
             if (!$validator->validate($value)) {
-                $this->_error = $validator->getMessage();
+                $this->_error = $validator;
                 return false;
             }
         }

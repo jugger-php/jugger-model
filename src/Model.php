@@ -3,13 +3,10 @@
 namespace jugger\model;
 
 use jugger\model\field\BaseField;
-use jugger\base\ArrayAccessTrait;
 
 abstract class Model implements \ArrayAccess
 {
-    use ArrayAccessTrait;
     use ModelAccessTrait;
-    use ModelHandlerTrait;
     use ModelValidateTrait;
 
     private $_fields;
@@ -18,8 +15,8 @@ abstract class Model implements \ArrayAccess
 
     public function __construct(array $values = [])
     {
-        $this->init();
         $this->setValues($values);
+        $this->init();
     }
 
     protected function init()
@@ -81,42 +78,5 @@ abstract class Model implements \ArrayAccess
             }
         }
         return $this->_fields;
-    }
-
-    public static function getLabel(string $name): string
-    {
-        return static::getLabels()[$name] ?? $name;
-    }
-
-    public static function getLabels(): array
-    {
-        return [];
-    }
-
-    public static function getHint(string $name): string
-    {
-        return static::getHints()[$name] ?? "";
-    }
-
-    public static function getHints(): array
-    {
-        return [];
-    }
-
-    public function process(): array
-    {
-        if (!$this->validate()) {
-            return $this->getErrors();
-        }
-
-        $result = $this->handle();
-        if ($result->isSuccess()) {
-            return [];
-        }
-        else {
-            return [
-                'handlers' => $result->getMessage(),
-            ];
-        }
     }
 }

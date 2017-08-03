@@ -363,7 +363,7 @@ class FieldTest extends TestCase
         $field->setValue("4.1.17");
         $this->assertEquals($field->getValue(), (new \DateTime("04:01:17"))->getTimestamp());
 
-        $field->setValue(1483484400);
+        $field->setValue(1483488000);
         $this->assertEquals($field->getValue(), $time);
     }
 }

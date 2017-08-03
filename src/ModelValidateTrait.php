@@ -2,9 +2,8 @@
 
 namespace jugger\model;
 
-/**
- * Трейт отвечающий за валидацию модели и работу с ошибками
- */
+use jugger\validator\BaseValidator;
+
 trait ModelValidateTrait
 {
     private $_errors = [];
@@ -15,9 +14,7 @@ trait ModelValidateTrait
         $fields = $this->getFields();
         foreach ($fields as $name => $field) {
             if (!$field->validate()) {
-                $label = static::getLabel($name);
-                $error = $field->getError();
-                $this->_errors[$name] = "Поле '{$label}': {$error}";
+                $this->_errors[$name] = $field->getError();
             }
         }
         return empty($this->_errors);
@@ -28,7 +25,7 @@ trait ModelValidateTrait
         return $this->_errors;
     }
 
-    public function getError(string $fieldName)
+    public function getError(string $fieldName): ?BaseValidator
     {
         return $this->getErrors()[$fieldName] ?? null;
     }
