@@ -69,5 +69,10 @@ class Psr4AutoloaderClass
 $loader = new Psr4AutoloaderClass();
 $loader->addNamespace('tests', __DIR__.'/../tests');
 $loader->addNamespace('jugger\\model', __DIR__.'/../src');
-$loader->addNamespace('jugger\\validator', __DIR__.'/../../jugger-validator/src');
 $loader->register();
+
+// composer autoload
+$composerAutoload = __DIR__.'/../../../autoload.php';
+if (file_exists($composerAutoload)) {
+    include_once $composerAutoload;
+}
